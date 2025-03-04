@@ -1,0 +1,169 @@
+:root {
+  --color-accent: oklch(65% 50% 0);
+  accent-color: var(--color-accent);
+  --border-gray: oklch(80% 3% 200);
+  color-scheme: dark;
+}
+
+body {
+  font: 100%/1.5 futura; /* 100% font size, 1.5 line height, system font. Same as in lab 1 */
+  max-width: 100ch;
+  margin-inline: 300px ;
+  padding: 0px;
+}
+nav ul,
+nav li {
+    display: contents;
+}
+
+nav {
+  display: flex;
+  }
+
+
+nav a {
+  flex: 1;
+  text-decoration: none ;
+  color: inherit;
+  text-align: center;
+  padding: 1em;
+  margin-bottom: 3ch ;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-color: oklch(50% 10% 200 / 40%);
+}
+
+nav a.current {
+  border-bottom: 0.4em solid oklch(50% 10% 200/40%);
+  padding-bottom: calc(10px - 0.4em);
+}
+
+
+nav a:hover {
+border-bottom:0.4em solid var(--color-accent) ;
+background-color: color-mix(in oklch, var(--color-accent), canvas 85%);
+}
+
+input,
+textarea,
+button {
+    font: inherit;
+}
+
+form {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 1em;
+}
+
+label{
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: 1;
+  font-size: 2rem;
+  margin-left: 1ch;
+}
+
+label.color-scheme {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: inline-flex;
+  gap: 4px;
+  font-size: 90%;
+  font-family: inherit;
+}
+
+input,
+textarea {
+  grid-column: 2;
+  margin-right: 1ch;
+}
+
+button{
+  grid-column: 1/-1;
+}
+
+img{
+  max-width: 100%;
+}
+
+.projects{
+  display: grid;
+  grid-template-columns:repeat(auto-fill, minmax(15em, 1fr)) ;
+  min-width: 15em;
+  max-width: 1fr;
+  gap: 0.5rem;
+}
+
+article {
+  display: grid;
+  grid-template-rows: subgrid;
+  grid-row: span 3;
+  gap: 0.5rem;
+}
+
+article h2 {
+  margin: 0;
+  margin-bottom: 0.5rem;
+}
+
+article p {
+  margin-bottom: 1rem;
+}
+
+h1{
+  font-size: 400%
+}
+
+h2{
+  font-size: 200%
+}
+
+p{
+  font-size: 125%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+#Resume {
+  max-width: 150rem;
+  margin: 0 auto;
+  background-color: #ffffff;
+  padding: 0.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#Resume section {
+  margin-bottom: 3rem;
+  padding: 2rem;
+  min-height: 350px;
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
+}
+
+#Resume h1{
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #0a0a0b;
+}
+#Resume h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #070708;
+}
+
+#Resume strong {
+  display: block;
+  font-size: 1.1rem;
+  color: #2c3e50;
+}
+
+#Resume p{
+  font-size: 100%;
+  color: #070708;
+}
