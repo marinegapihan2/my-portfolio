@@ -21,7 +21,7 @@ let navLinks = $$("nav a");
 
 // step 3.1
 let pages = [
-	{url: ".", title: "Home"},
+	{url: "./", title: "Home"},
 	{url: "projects", title: "Projects"},
     {url: "contact", title: "Contact"},
     {url: "CV", title: "Resume"},
