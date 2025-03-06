@@ -20,16 +20,16 @@ let navLinks = $$("nav a");
 // STEP 3
 
 // step 3.1
-let pages = [
-	{url: "./", title: "Home"},
-	{url: "projects", title: "Projects"},
-    {url: "contact", title: "Contact"},
-    {url: "CV", title: "Resume"},
-    {url: "https://github.com/marinegapihan2", title: "GitHub" }
-];
+// let pages = [
+// 	{url: "./", title: "Home"},
+// 	{url: "projects", title: "Projects"},
+//     {url: "contact", title: "Contact"},
+//     {url: "CV", title: "Resume"},
+//     {url: "https://github.com/marinegapihan2", title: "GitHub" }
+// ];
 
-let nav = document.createElement("nav");
-document.body.prepend(nav);
+// let nav = document.createElement("nav");
+// document.body.prepend(nav);
 
 // const ARE_WE_HOME = document.documentElement.classList.contains("home");
 
