@@ -2,6 +2,7 @@
   <title>Resume</title>
 </svelte:head>
 
+<h1> Marine Gapihan</h1>
 <p>Cambridge, MA - marine22@mit.edu</p>
 
 <section id="Resume">
