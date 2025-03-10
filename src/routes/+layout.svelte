@@ -12,9 +12,20 @@ let pages = [
     {url: "https://github.com/marinegapihan2", title: "GitHub" }
 ];
 
+let colorScheme = "light";
+
+let root = globalThis?.document?.documentElement;
+
+$: root?.style.setProperty("color-scheme", colorScheme);
+
+let localStorage = globalThis.localStorage ?? {};
+
+$: localStorage.colorScheme = colorScheme;
+
 
 </script>
 
+<!-- <p>Current theme: {colorScheme}</p> -->
 
 <nav>
 
@@ -29,5 +40,17 @@ let pages = [
   {/each}
 </nav>
 
+<label class="color-scheme">
+    Theme:
+    <select bind:value={ colorScheme }>
+        <option value="dark light">Automatic</option>
+        <option value="dark">Dark</option>
+        <option value="light">Light</option>
+    </select>
+</label>
+
+<style>
+
+</style>
 
 YOLO <slot/>
