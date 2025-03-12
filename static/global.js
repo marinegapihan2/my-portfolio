@@ -1,11 +1,11 @@
 // STEP 1
-console.log("IT’S ALIVE!");
+// console.log("IT’S ALIVE!");
 
-function $$ (selector, context = document) {
-	return Array.from(context.querySelectorAll(selector));
-}
+// function $$ (selector, context = document) {
+// 	return Array.from(context.querySelectorAll(selector));
+// }
 
-let navLinks = $$("nav a");
+// let navLinks = $$("nav a");
 
 // // 2.2
 // let currentLink = navLinks.find(a => a.host === location.host && a.pathname === location.pathname)
@@ -48,28 +48,28 @@ let navLinks = $$("nav a");
 
 // step 3.2
 
-for (let p of pages) {
-	let url = p.url;
-	let title = p.title;
+// for (let p of pages) {
+// 	let url = p.url;
+// 	let title = p.title;
 
-    // if (!ARE_WE_HOME && !url.startsWith("http")) {
-    //     url = "../" + url;
-    // }
+//     // if (!ARE_WE_HOME && !url.startsWith("http")) {
+//     //     url = "../" + url;
+//     // }
 
-    let a = document.createElement("a");
-    a.href = url;
-    a.textContent = title;
+//     let a = document.createElement("a");
+//     a.href = url;
+//     a.textContent = title;
 
-    if (a.host === location.host && a.pathname === location.pathname) {
-         a.classList.add("current");
-         }
+//     if (a.host === location.host && a.pathname === location.pathname) {
+//          a.classList.add("current");
+//          }
 
-    if (a.host!==location.host) {
-        a.target = "_blank";
-        }
+//     if (a.host!==location.host) {
+//         a.target = "_blank";
+//         }
 
-    nav.append(a);
-}
+//     nav.append(a);
+// }
 
 // STEP 4
 // step 4.1
