@@ -35,7 +35,7 @@
     <p class="error">Something went wrong: {error.message}</p>
   {/await}
 
-
+<br>
     <h2>Latest Projects</h2>
 
     <div class="projects">

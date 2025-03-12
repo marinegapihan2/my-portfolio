@@ -132,7 +132,7 @@ h1, h2, h3, h4, h5, h6 {
 dl {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  border: 2px solid #000;
+  border: 2px solid oklch(65% 50% 0);
   padding: 10px;
   margin: 20px;
   border-radius: 8px;
