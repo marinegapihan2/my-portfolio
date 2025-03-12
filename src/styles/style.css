@@ -129,6 +129,25 @@ h1, h2, h3, h4, h5, h6 {
   text-wrap: balance;
 }
 
+dl {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  border: 2px solid #000;
+  padding: 10px;
+  margin: 20px;
+  border-radius: 8px;
+}
+
+dt {
+  grid-row: 1;
+  font-size: 150%;
+}
+
+dd {
+  grid-row: 2;
+  font-family: 150%;
+}
+
 #Resume {
   max-width: 150rem;
   margin: 0 auto;

@@ -12,16 +12,17 @@ let pages = [
     {url: "https://github.com/marinegapihan2", title: "GitHub" }
 ];
 
-let colorScheme = "light";
+let colorScheme = globalThis.localStorage?.getItem("colorScheme") ?? "light";
 
 let root = globalThis?.document?.documentElement;
 
 $: root?.style.setProperty("color-scheme", colorScheme);
 
-let localStorage = globalThis.localStorage ?? {};
-
-$: localStorage.colorScheme = colorScheme;
-
+$: {
+    if (globalThis.localStorage) {
+        globalThis.localStorage.setItem("colorScheme", colorScheme);
+    }
+}
 
 </script>
 
@@ -53,4 +54,4 @@ $: localStorage.colorScheme = colorScheme;
 
 </style>
 
-YOLO <slot/>
+<slot/>

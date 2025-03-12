@@ -5,6 +5,7 @@
 
 <article>
     <svelte:element this={"h" + hLevel}>{data.title}</svelte:element>
+    <p><strong>{data.year} </strong></p>
     <img src={data.image} alt="">
     <p> {data.description}</p>
 </article>
@@ -13,7 +14,7 @@
 article {
   display: grid;
   grid-template-rows: subgrid;
-  grid-row: span 3;
+  grid-row: span 4;
   gap: 0.5rem;
 }
 
