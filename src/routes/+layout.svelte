@@ -5,10 +5,10 @@ import "../styles/style.css";
 
 
 let pages = [
-	{url: "./", title: "Home"},
-	{url: "./projects", title: "Projects"},
-    {url: "./contact", title: "Contact"},
-    {url: "./CV", title: "Resume"},
+	{url: "/", title: "Home"},
+	{url: "/projects", title: "Projects"},
+    {url: "/contact", title: "Contact"},
+    {url: "/CV", title: "Resume"},
     {url: "https://github.com/marinegapihan2", title: "GitHub" }
 ];
 
