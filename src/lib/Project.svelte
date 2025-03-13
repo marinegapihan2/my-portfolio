@@ -5,9 +5,9 @@
 
 <article>
     <svelte:element this={"h" + hLevel}>{data.title}</svelte:element>
-    <p><strong>{data.year} </strong></p>
     <img src={data.image} alt="">
     <p> {data.description}</p>
+    <p><strong>{data.year} </strong></p>
 </article>
 
 <style>
