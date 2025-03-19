@@ -37,15 +37,38 @@ export let selectedIndex = -1;
 
 	<ul class="legend">
 		{#each data as d, index}
-		<li style="--color: { colors(index) }">
-			<span class:selected={selectedIndex === index} class="swatch"></span>
+		<li
+			style="--color: { colors(index) }"
+			class:selected={selectedIndex === index}
+			on:click={() => selectedIndex = selectedIndex === index ? -1 : index}
+		>
+			<span class="swatch"></span>
 			{d.label} <em>({d.value})</em>
 		</li>
-	{/each}
+		{/each}
 	</ul>
+
 </div>
 
 <style>
+
+svg path {
+	transition: opacity 0.3s, fill 0.3s;
+	cursor: pointer;
+}
+
+svg:has(.selected) path:not(.selected) {
+	opacity: 0.5;
+}
+
+path:hover {
+	opacity: 1 !important;
+}
+
+path.selected {
+	fill: oklch(60% 45% 0) !important;
+	opacity: 1;
+}
 
 .selected {
 	--color: oklch(60% 45% 0) !important;
@@ -62,8 +85,17 @@ export let selectedIndex = -1;
 ul:has(.selected) li:not(.selected) {
 	color: gray;
 }
-path:hover {
-	opacity: 100% !important;
+
+.legend:has(.selected) li:not(.selected) {
+	color: gray;
+}
+
+.legend li.selected {
+	color: oklch(60% 45% 0);
+}
+
+.legend li.selected .swatch {
+	background-color: oklch(60% 45% 0) !important;
 }
 
     svg {
@@ -73,13 +105,6 @@ path:hover {
 	overflow: visible;
 }
 
-svg:has(path:hover) path:not(:hover) {
-	opacity: 50%;
-}
-path {
-	transition: 300ms;
-	cursor: pointer;
-}
 
 .swatch {
     display: inline-block;
@@ -107,7 +132,7 @@ path {
 
 .container{
 	display: flex;
-	align-items: center; /* Aligns items vertically */
+	align-items: center;
     gap: 20px;
 }
 

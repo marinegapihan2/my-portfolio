@@ -20,9 +20,22 @@ let pieData;
     import projects from "$lib/projects.json";
     import Pie from '$lib/Pie.svelte';
 
+    let selectedYearIndex = -1;
+    let selectedYear;
+$: selectedYear = selectedYearIndex > -1 ? pieData[selectedYearIndex].label : null;
+$: filteredByYear = filteredProjects.filter(project => {
+        if (selectedYear) {
+            return project.year === selectedYear;
+        }
+
+        return true;
+    });
+
+
 </script>
 
-<Pie data={pieData} />
+<Pie data={pieData} bind:selectedIndex={selectedYearIndex} />
+
 
 <input type="search" bind:value={query}
        aria-label="Search projects" placeholder="🔍 Search projects…" />
@@ -31,11 +44,10 @@ let pieData;
 <svelte:head>
   <title>Projects</title>
 </svelte:head>
-
         <h1>{projects.length} Projects</h1>
 
         <div class="projects">
-            {#each filteredProjects as p}
+            {#each filteredByYear as p}
 
             <Project data={p}/>
 
