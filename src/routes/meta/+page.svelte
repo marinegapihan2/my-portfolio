@@ -25,6 +25,8 @@ let xAxis, yAxis;
 
 let yAxisGridlines;
 
+let hoveredIndex = -1;
+$: hoveredCommit = commits[hoveredIndex] ?? hoveredCommit ?? {};
 
 onMount(async () => {
 	data = await d3.csv("/loc.csv", row => ({
@@ -97,7 +99,6 @@ $: {
 	);
 }
 
-
 </script>
 
 
@@ -131,6 +132,9 @@ $: {
 	<g class="dots">
 		{#each commits as commit, index }
 			<circle
+
+				on:mouseenter={evt => hoveredIndex = index}
+				on:mouseleave={evt => hoveredIndex = -1}
 				cx={ xScale(commit.datetime) }
 				cy={ yScale(commit.hourFrac) }
 				r="5"
@@ -139,7 +143,30 @@ $: {
 		{/each}
 		</g>
 
+<circle
+		on:mouseenter={evt => hoveredIndex = index}
+		on:mouseleave={evt => hoveredIndex = -1}
+	/>
+
 </svg>
+
+	<dl class="info tooltip">
+
+		<dt>Commit</dt>
+		<dd><a href="{hoveredCommit.url}" target="_blank">{hoveredCommit.id}</a></dd>
+
+		<dt>Date</dt>
+		<dd>{hoveredCommit.datetime?.toLocaleString("en", {dateStyle: "full"})}</dd>
+
+		<dt>Time</dt>
+		<dd>{hoveredCommit.datetime?.toLocaleTimeString()}</dd>
+
+		<dt>Author</dt>
+		<dd>{hoveredCommit.author}</dd>
+
+		<dt>Lines Edited</dt>
+		<dd>{hoveredCommit.totalLines}</dd>
+	</dl>
 
 <style>
 	svg {
@@ -147,6 +174,45 @@ $: {
 	}
 	.gridlines {
 	stroke-opacity: .2;
+}
+
+dl.info {
+  display: block;
+  padding: 0.5em;
+  border: 2px solid oklch(0% 0% 0);
+}
+
+dl.info dt {
+  text-align: left;
+  font-size: 100%;
+  color: gray;
+  margin-bottom: 0.3em;
+}
+
+dl.info dd {
+	font-size: 80%;
+  text-align: left;
+  margin: 0;
+  margin-bottom: 0.3em;
+}
+
+
+.tooltip {
+  position: fixed;
+  top: 1em;
+  left: 1em;
+}
+
+circle {
+	transition: 200ms;
+
+	&:hover {
+		transform: scale(1.5);
+	}
+
+	transform-origin: center;
+	transform-box: fill-box;
+
 }
 
 </style>
