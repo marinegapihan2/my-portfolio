@@ -52,23 +52,30 @@ export let selectedIndex = -1;
 
 <style>
 
+
+/* Set full opacity for all segments by default */
 svg path {
-	transition: opacity 0.3s, fill 0.3s;
-	cursor: pointer;
+    transition: opacity 0.3s ease;
+    opacity: 1; /* Default full opacity for all segments */
 }
 
-svg:has(.selected) path:not(.selected) {
-	opacity: 0.5;
+/* When a segment is hovered, make it fully opaque */
+svg path:hover {
+    opacity: 1;
 }
 
-path:hover {
-	opacity: 1 !important;
+/* When a segment is selected, make it fully opaque */
+svg path.selected {
+    opacity: 1 !important;
 }
 
-path.selected {
-	fill: oklch(60% 45% 0) !important;
-	opacity: 1;
+/* When a segment is not hovered, reduce opacity */
+svg:has(path:hover) path:not(:hover) {
+	opacity: 50%;
 }
+
+
+
 
 .selected {
 	--color: oklch(60% 45% 0) !important;
