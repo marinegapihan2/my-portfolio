@@ -6,6 +6,33 @@
 import * as d3 from "d3";
 import { onMount } from "svelte";
 
+import {
+	computePosition,
+	autoPlacement,
+	offset,
+} from '@floating-ui/dom';
+
+let commitTooltip;
+let tooltipPosition = {x: 0, y: 0};
+
+async function dotInteraction (index, evt) {
+	let hoveredDot = evt.target;
+	if (evt.type === "mouseenter") {
+		hoveredIndex = index;
+		cursor = {x: evt.x, y: evt.y};
+		tooltipPosition = await computePosition(hoveredDot, commitTooltip, {
+			strategy: "fixed", // because we use position: fixed
+			middleware: [
+				offset(5), // spacing from tooltip to dot
+				autoPlacement() // see https://floating-ui.com/docs/autoplacement
+			],
+		});        }
+	else if (evt.type === "mouseleave") {
+		hoveredIndex = -1
+	}
+}
+
+
 let data = [];
 let commits = [];
 let numFiles = 0;
@@ -27,6 +54,10 @@ let yAxisGridlines;
 
 let hoveredIndex = -1;
 $: hoveredCommit = commits[hoveredIndex] ?? hoveredCommit ?? {};
+
+let cursor = {x: 0, y: 0};
+
+
 
 onMount(async () => {
 	data = await d3.csv("/loc.csv", row => ({
@@ -132,9 +163,8 @@ $: {
 	<g class="dots">
 		{#each commits as commit, index }
 			<circle
-
-				on:mouseenter={evt => hoveredIndex = index}
-				on:mouseleave={evt => hoveredIndex = -1}
+				on:mouseenter={evt => dotInteraction(index, evt)}
+				on:mouseleave={evt => dotInteraction(index, evt)}
 				cx={ xScale(commit.datetime) }
 				cy={ yScale(commit.hourFrac) }
 				r="5"
@@ -143,14 +173,16 @@ $: {
 		{/each}
 		</g>
 
-<circle
-		on:mouseenter={evt => hoveredIndex = index}
-		on:mouseleave={evt => hoveredIndex = -1}
-	/>
-
 </svg>
 
-	<dl class="info tooltip">
+<dl
+class="info tooltip"
+bind:this={commitTooltip}
+style="top: {tooltipPosition.y}px; left: {tooltipPosition.x}px;"
+hidden={hoveredIndex === -1}
+>
+
+
 
 		<dt>Commit</dt>
 		<dd><a href="{hoveredCommit.url}" target="_blank">{hoveredCommit.id}</a></dd>
@@ -179,7 +211,14 @@ $: {
 dl.info {
   display: block;
   padding: 0.5em;
-  border: 2px solid oklch(0% 0% 0);
+  border: 2px oklch(0% 0% 0);
+	transition-duration: 500ms;
+	transition-property: opacity, visibility;
+
+	&[hidden]:not(:hover, :focus-within) {
+		opacity: 0;
+		visibility: hidden;
+	}
 }
 
 dl.info dt {
@@ -201,7 +240,16 @@ dl.info dd {
   position: fixed;
   top: 1em;
   left: 1em;
+  padding: 0.8em 1em;
+  background-color: oklch(98% 0% 0 / 80%);
+  border: 2px solid gray;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(5px);
+  color: black;
+  font-size: 0.9em;
 }
+
 
 circle {
 	transition: 200ms;
