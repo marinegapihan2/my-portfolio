@@ -119,6 +119,8 @@ commits = d3.groups(data, d => d.commit).map(([commit, lines]) => {
 
 commits = d3.sort(commits, d => -d.totalLines);
 
+console.log(commits);
+
 });
 
 $: minDate = d3.min(commits.map(d => d.date));
