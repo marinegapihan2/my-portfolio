@@ -230,7 +230,7 @@ hidden={hoveredIndex === -1}
 >
 
 
-
+	<!-- hi -->
 		<dt>Commit</dt>
 		<dd><a href="{hoveredCommit.url}" target="_blank">{hoveredCommit.id}</a></dd>
 
