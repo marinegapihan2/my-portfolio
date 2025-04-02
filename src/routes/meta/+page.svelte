@@ -85,7 +85,9 @@ onMount(async () => {
 	date: new Date(row.date + "T00:00" + row.timezone),
 	datetime: new Date(row.datetime),
     file: row.file,
+
 }));
+
 numFiles = new Set(data.map(d => d.file)).size;
 const dayOfWeekCount = { Sunday: 0, Monday: 0, Tuesday: 0, Wednesday: 0, Thursday: 0, Friday: 0, Saturday: 0 };
     data.forEach(d => {
@@ -114,7 +116,8 @@ commits = d3.groups(data, d => d.commit).map(([commit, lines]) => {
 
 	return ret;
 });
-console.log(commits);
+
+commits = d3.sort(commits, d => -d.totalLines);
 
 });
 
@@ -156,6 +159,16 @@ $: selectedCounts = d3.rollup(
 );
 $: languageBreakdown = allTypes.map(type => [type, selectedCounts.get(type) || 0]);
 
+$: minRadius = 2;
+$: maxRadius = 30;
+
+$: lineExtent = d3.extent(commits, d => d.totalLines);
+
+$: rScale = d3.scaleSqrt()
+              .domain(lineExtent)
+              .range([minRadius, maxRadius]);
+
+
 </script>
 
 
@@ -195,8 +208,9 @@ $: languageBreakdown = allTypes.map(type => [type, selectedCounts.get(type) || 0
 				on:mouseleave={evt => dotInteraction(index, evt)}
 				cx={ xScale(commit.datetime) }
 				cy={ yScale(commit.hourFrac) }
-				r="5"
+				r={ rScale(commit.totalLines) }
 				fill="steelblue"
+				fill-opacity="0.6"
 			/>
 		{/each}
 		</g>
