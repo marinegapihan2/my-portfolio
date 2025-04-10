@@ -171,6 +171,9 @@ $: rScale = d3.scaleSqrt()
               .domain(lineExtent)
               .range([minRadius, maxRadius]);
 
+let commitProgress = 100;
+
+$: commitMaxTime = timeScale.invert(commitProgress);
 
 </script>
 
@@ -196,6 +199,17 @@ $: rScale = d3.scaleSqrt()
         <dd>{mostWorkDayOfWeek}</dd>
      </dl>
 </section>
+
+	<div class="slider-container"
+	<label>
+		Show commits until:
+	</label>
+	<input>
+	<time></time>
+
+
+</div>
+
 
 <h2>Commits by time of day</h2>
 <svg viewBox="0 0 {width} {height}">
