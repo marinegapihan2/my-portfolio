@@ -173,7 +173,20 @@ $: rScale = d3.scaleSqrt()
 
 let commitProgress = 100;
 
+import { scaleTime } from 'd3-scale';
+  let timeScale;
+
+  $: {
+    const dates = commits.map(d => new Date(d.datetime));
+    const minDate = new Date(Math.min(...dates));
+    const maxDate = new Date(Math.max(...dates));
+    timeScale = scaleTime().domain([minDate, maxDate]).range([0, 100]);
+  }
+
+
 $: commitMaxTime = timeScale.invert(commitProgress);
+$: datetime = commitMaxTime.toLocaleString("en", { timeStyle: "short", dateStyle: "short" });
+
 
 </script>
 
@@ -200,16 +213,21 @@ $: commitMaxTime = timeScale.invert(commitProgress);
      </dl>
 </section>
 
-	<div class="slider-container"
-	<label>
-		Show commits until:
-	</label>
-	<input>
-	<time></time>
-
+<div class="slider-container">
+	<div class="slider-row">
+	<label for="time-slider" class="slider-label" > Show commits until: </label>
+	<input
+	type="range"
+	id="time-slider"
+	class="time-slider"
+	min="0"
+	max="100"
+	bind:value={commitProgress}
+	/>
+	</div>
+	<time class="slider-time"> {datetime}</time>
 
 </div>
-
 
 <h2>Commits by time of day</h2>
 <svg viewBox="0 0 {width} {height}">
@@ -242,6 +260,7 @@ bind:this={commitTooltip}
 style="top: {tooltipPosition.y}px; left: {tooltipPosition.x}px;"
 hidden={hoveredIndex === -1}
 >
+
 
 
 	<!-- hi -->
@@ -327,5 +346,38 @@ circle {
 	transform-box: fill-box;
 
 }
+
+  .slider-container {
+    display: flex;
+    grid-template-rows: auto auto;
+	width: 1000px;
+    max-width: none;
+    margin-bottom: 1rem;
+  }
+
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    white-space: nowrap;
+  }
+
+  .time-slider {
+    flex: 1;
+	width: 100%;
+    max-width: 1000px;
+	font-size: 80%;
+  }
+
+  .slider-time {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #555;
+	font-size: 100%;
+  }
+
+  .slider-label{
+font-size: 90%;
+  }
 
 </style>
