@@ -13,6 +13,9 @@ import {
 	offset,
 } from '@floating-ui/dom';
 
+import FileLines from '$lib/FileLines.svelte';
+
+
 import Bar from '$lib/Bar.svelte';
 
 
@@ -70,7 +73,7 @@ let xAxis, yAxis;
 let yAxisGridlines;
 
 let hoveredIndex = -1;
-$: hoveredCommit = commits[hoveredIndex] ?? hoveredCommit ?? {};
+$: hoveredCommit = filteredCommits[hoveredIndex] ?? hoveredCommit ?? {};
 
 let cursor = {x: 0, y: 0};
 
@@ -124,8 +127,8 @@ console.log(commits);
 
 });
 
-$: minDate = d3.min(commits.map(d => d.date));
-$: maxDate = d3.max(commits.map(d => d.date));
+$: minDate = d3.min(filteredCommits.map(d => d.date));
+$: maxDate = d3.max(filteredCommits.map(d => d.date));
 $: maxDatePlusOne = new Date(maxDate);
 $: maxDatePlusOne.setDate(maxDatePlusOne.getDate() + 1);
 
@@ -187,6 +190,8 @@ import { scaleTime } from 'd3-scale';
 $: commitMaxTime = timeScale.invert(commitProgress);
 $: datetime = commitMaxTime.toLocaleString("en", { timeStyle: "short", dateStyle: "short" });
 
+$: filteredCommits = commits.filter(commit => commit.datetime <= commitMaxTime)
+$: filteredLines = commits.filter(commit => commit.datetime <= commitMaxTime)
 
 </script>
 
@@ -203,7 +208,7 @@ $: datetime = commitMaxTime.toLocaleString("en", { timeStyle: "short", dateStyle
         <dd>{data.length}</dd>
 
         <dt>Commits</dt>
-        <dd>{commits.length}</dd>
+        <dd>{filteredCommits.length}</dd>
 
         <dt>Number of Files</dt>
         <dd>{numFiles}</dd>
@@ -229,13 +234,16 @@ $: datetime = commitMaxTime.toLocaleString("en", { timeStyle: "short", dateStyle
 
 </div>
 
+
+<FileLines lines={filteredLines} width={width} />
+
 <h2>Commits by time of day</h2>
 <svg viewBox="0 0 {width} {height}">
 	<g transform="translate(0, {usableArea.bottom})" bind:this={xAxis} />
 	<g transform="translate({usableArea.left}, 0)" bind:this={yAxis} />
 	<g class="gridlines" transform="translate({usableArea.left}, 0)" bind:this={yAxisGridlines} />
 	<g class="dots">
-		{#each commits as commit, index }
+		{#each filteredCommits as commit, index (commit.id) }
 			<circle
 				class:selected={ clickedCommits.includes(commit) }
 				on:click={ evt => dotInteraction(index, evt) }
@@ -345,6 +353,10 @@ circle {
 	transform-origin: center;
 	transform-box: fill-box;
 
+	@starting-style {
+	r: 0;
+}
+
 }
 
   .slider-container {
@@ -377,7 +389,7 @@ circle {
   }
 
   .slider-label{
-font-size: 90%;
+font-size: 100%;
   }
 
 </style>
