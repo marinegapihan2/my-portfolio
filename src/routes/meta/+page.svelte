@@ -191,7 +191,7 @@ $: commitMaxTime = timeScale.invert(commitProgress);
 $: datetime = commitMaxTime.toLocaleString("en", { timeStyle: "short", dateStyle: "short" });
 
 $: filteredCommits = commits.filter(commit => commit.datetime <= commitMaxTime)
-$: filteredLines = commits.filter(commit => commit.datetime <= commitMaxTime)
+$: filteredLines = data.filter(data => data.datetime <= commitMaxTime)
 
 </script>
 
@@ -234,7 +234,6 @@ $: filteredLines = commits.filter(commit => commit.datetime <= commitMaxTime)
 
 </div>
 
-
 <FileLines lines={filteredLines} width={width} />
 
 <h2>Commits by time of day</h2>
@@ -259,6 +258,7 @@ $: filteredLines = commits.filter(commit => commit.datetime <= commitMaxTime)
 		</g>
 
 </svg>
+
 
 <Bar data={languageBreakdown} width={width} />
 
