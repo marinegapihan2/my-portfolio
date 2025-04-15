@@ -13,78 +13,13 @@
                  .map(([name, lines]) => ({ name, lines }));
 
 
-
-  // $: if (svg) {
-  //     const svgWidth = 1200;
-  //     const totalHeight = positions.length
-  //       ? positions[positions.length - 1] + filesWithHeights[filesWithHeights.length - 1].groupHeight
-  //       : 0;
-  //     d3.select(svg)
-  //       .attr('width', svgWidth)
-  //       .attr('height', totalHeight)
-  //       .style('overflow', 'visible');
-
-  //     // Append <defs> for drop shadow (white glow) if not already present.
-  //     const defs = d3.select(svg).select("defs");
-  //     if (defs.empty()) {
-  //       d3.select(svg)
-  //         .append("defs")
-  //         .html(`<filter id="white-glow" x="-50%" y="-50%" width="200%" height="200%">
-  //           <feDropShadow dx="0" dy="0" stdDeviation="2" flood-color="hsl(0, 0%, 100%)" flood-opacity="0.9"/>
-  //         </filter>`);
-  //     }
-
-  //     const groups = d3.select(svg)
-  //       .selectAll('g.file')
-  //       .data(filesWithHeights, d => d.name);
-
-  //     groups.exit().remove();
-
-  //     const enterGroups = groups.enter()
-  //       .append('g')
-  //       .attr('class', 'file')
-  //       .attr('transform', (d, i) => `translate(0, ${positions[i]})`);
-
-  //     // Insert a background rectangle as the first child to serve as the container's background.
-  //     enterGroups.insert('rect', ':first-child')
-  //       .attr('class', 'file-bg')
-  //       .attr('x', 0)
-  //       .attr('y', 0)
-  //       .attr('width', svgWidth)
-  //       .attr('height', d => d.groupHeight)
-  //       .style('fill', 'hsla(0, 0%, 100%, 0.9)')
-  //       .style('filter', 'url(#white-glow)');
-
-  //     // Append file name text.
-  //     enterGroups.append('text')
-  //       .attr('class', 'filename')
-  //       .attr('x', 10)
-  //       .attr('y', baseY)
-  //       .attr('dominant-baseline', 'hanging')
-  //       .text(d => d.name);
-
-  //     // Append total lines text.
-  //     enterGroups.append('text')
-  //       .attr('class', 'total-lines')
-  //       .attr('x', 10)
-  //       .attr('y', baseY + totalLinesOffset)
-  //       .attr('dominant-baseline', 'hanging')
-  //       .text(d => `Total: ${d.lines.length} lines`);
-
-  //     // Append unit dots text using generateDots.
-  //     enterGroups.append('text')
-  //       .attr('class', 'unit-dots')
-  //       .attr('x', dotsColumnX)
-  //       .attr('y', baseY - 2)
-  //       .attr('dominant-baseline', 'mathematical')
-  //       .attr('fill', "#1f77b4")
-  //       .html(d => generateDots(d, svgWidth));
-  //   }
-
   $: if (svg) {
     const rowHeight = 30;
     const width = 400;
     const height = files.length * rowHeight;
+    const baseY = 20;
+    const totalLinesOffset = 18;
+
 
     d3.select(svg)
       .attr('width', width)
@@ -105,20 +40,20 @@
     enterGroups.append('text')
         .attr('class', 'filename')
         .attr('x', 10)
-        .attr('y', rowHeight / 2)
+        .attr('y', baseY)
         .attr('dominant-baseline', 'hanging')
         .text(d => d.name);
 
 
     enterGroups.append('text')
       .attr('class', 'linecount')
-      .attr('x', 250)
-      .attr('y', rowHeight / 2)
+      .attr('x', 10)
+      .attr('y', baseY + totalLinesOffset)
       .attr('dominant-baseline', 'hanging')
       .text(d => `${d.lines.length} lines`);
 
 
-    groups.attr('transform', (d, i) => `translate(0, ${i * rowHeight})`)
+    groups.attr('transform', (d, i) => `translate(0, )`)
       .select('text.filename')
       .text(d => d.name);
 
@@ -139,7 +74,25 @@
     tspans += `<tspan x="${dotsColumnX}" dy="${r === 0 ? 0 : dotRowHeight + 'px'}">${rowDots}</tspan>`;
   }
   return tspans;
+
 }
+  $: filesWithHeights = files.map(file => {
+  const totalDots = Math.ceil(file.lines.length / linesPerDot);
+  const availableWidth = width - dotsColumnX;
+  const maxDotsPerRow = Math.floor(availableWidth / approxDotWidth) || totalDots;
+  const dotRows = Math.ceil(totalDots / maxDotsPerRow);
+  return { ...file, groupHeight: fileInfoHeight + dotRows * dotRowHeight };
+});
+
+$: positions = (() => {
+  let pos = [], y = 0;
+  for (const f of filesWithHeights) {
+    pos.push(y);
+    y += f.groupHeight;
+  }
+  return pos;
+})();
+
 
   </script>
 
