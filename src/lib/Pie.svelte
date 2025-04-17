@@ -21,6 +21,13 @@ let arcs;
 
 export let selectedIndex = -1;
 
+function toggleWedge(index, event) {
+	if (!event.key || event.key === "Enter" || event.key === " ") {
+		selectedIndex = index;
+	}
+}
+
+
 </script>
 
 
@@ -29,7 +36,11 @@ export let selectedIndex = -1;
 		{#each arcs as arc, index}
 	<path d={arc} fill={ colors(index) }
 	    class:selected={selectedIndex === index}
-	    on:click={e => selectedIndex = selectedIndex === index ? -1 : index}
+		on:click={e => toggleWedge(index, e)}
+		on:keyup={e => toggleWedge(index, e)}
+		tabindex="0"
+		role="button"
+		aria-label={arc.label}
 		/>
 {/each}
 
@@ -146,4 +157,13 @@ ul:has(.selected) li:not(.selected) {
 .legend{
 	flex: 1;
 }
+
+
+path {
+	transition: 300ms;
+	outline: none;
+}
+
+svg:hover path:not(:hover), svg:focus-visible path:not(:focus-visible) { opacity: 50%; }
+
 </style>
