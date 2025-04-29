@@ -1,65 +1,84 @@
 <script>
-import * as d3 from 'd3';
-import "../styles/style.css";
-let arcGenerator = d3.arc().innerRadius(0).outerRadius(50);
-let arc = arcGenerator({
-	startAngle: 0,
-	endAngle: 2 * Math.PI
-});
-export let data = [];
+	import * as d3 from 'd3';
+	import "../styles/style.css";
 
-let sliceGenerator = d3.pie().value(d => d.value);
-let colors = d3.scaleOrdinal(d3.schemeTableau10);
+	let arcGenerator = d3.arc().innerRadius(0).outerRadius(50);
+	export let data = [];
 
-let arcData;
-let arcs;
+	let sliceGenerator = d3.pie().value(d => d.value);
+	let colors = d3.scaleOrdinal(d3.schemeTableau10);
 
-    $: {
-		arcData = sliceGenerator(data);
-		arcs = arcData.map(d => arcGenerator(d));
-    }
+	let arcData;
+	let arcs;
+	let liveText = "";
 
-export let selectedIndex = -1;
 
-function toggleWedge(index, event) {
-	if (!event.key || event.key === "Enter" || event.key === " ") {
+	$: {
+	  arcData = sliceGenerator(data);
+	  arcs = arcData.map(d => arcGenerator(d));
+	}
+
+	$: description = `A pie chart showing project counts by year. ${data.map(d => `${d.label}: ${d.value} projects`).join(', ')}.`;
+
+
+	export let selectedIndex = -1;
+
+	function toggleWedge(index, event) {
+	if (!event.key || event.key === "Enter") {
 		selectedIndex = index;
+		const d = data[index];
+		liveText = `${d.label}: ${d.value} projects selected.`;
 	}
 }
 
+	function handleKeydown(event, index) {
+	  if (event.key === "Enter" || event.key === " ") {
+		event.preventDefault(); // prevent scrolling with spacebar
+		toggleWedge(index);
+	  }
+	}
+  </script>
 
-</script>
+  <div class="container">
+	<svg
+  viewBox="-50 -50 100 100"
+  role="img"
+  aria-labelledby="pie-title pie-desc">
+  <title id="pie-title">Projects by Year</title>
+  <desc id="pie-desc">{description}</desc>
 
-
-<div class="container">
-	<svg viewBox="-50 -50 100 100">
-		{#each arcs as arc, index}
-	<path d={arc} fill={ colors(index) }
-	    class:selected={selectedIndex === index}
-		on:click={e => toggleWedge(index, e)}
-		on:keyup={e => toggleWedge(index, e)}
-		tabindex="0"
-		role="button"
-		aria-label={arc.label}
-		/>
-{/each}
-
+	  {#each arcs as arc, index}
+		<g
+		  tabindex="0"
+		  role="button"
+		  aria-label={data[index]?.label}
+		  on:click={() => toggleWedge(index)}
+		  on:keydown={(e) => handleKeydown(e, index)}
+		  class:selected={selectedIndex === index}
+		>
+		  <path
+			d={arc}
+			fill={colors(index)}
+		  />
+		</g>
+	  {/each}
 	</svg>
 
-	<ul class="legend">
-		{#each data as d, index}
-		<li
-			style="--color: { colors(index) }"
-			class:selected={selectedIndex === index}
-			on:click={() => selectedIndex = selectedIndex === index ? -1 : index}
-		>
-			<span class="swatch"></span>
-			{d.label} <em>({d.value})</em>
-		</li>
-		{/each}
-	</ul>
+	<p aria-live="polite" class="sr-only">{liveText}</p>
 
-</div>
+	<ul class="legend">
+	  {#each data as d, index}
+		<li
+		  style="--color: {colors(index)}"
+		  class:selected={selectedIndex === index}
+		  on:click={() => selectedIndex = selectedIndex === index ? -1 : index}
+		>
+		  <span class="swatch"></span>
+		  {d.label} <em>({d.value})</em>
+		</li>
+	  {/each}
+	</ul>
+  </div>
 
 <style>
 
@@ -85,7 +104,28 @@ svg:has(path:hover) path:not(:hover) {
 	opacity: 50%;
 }
 
+path {
+	transition: 300ms;
+	outline: none;
+	cursor: pointer;
+}
 
+svg:hover path:not(:hover), svg:focus-visible path:not(:focus-visible) { opacity: 50%; }
+
+path:hover,
+path:focus-visible {
+  opacity: 1;
+  stroke: black; /* Add a visible stroke to show focus */
+  stroke-width: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
 
 
 .selected {
@@ -163,7 +203,5 @@ path {
 	transition: 300ms;
 	outline: none;
 }
-
-svg:hover path:not(:hover), svg:focus-visible path:not(:focus-visible) { opacity: 50%; }
 
 </style>
