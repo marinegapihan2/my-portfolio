@@ -74,6 +74,7 @@ function toggleView() {
 		<g
 		  tabindex="0"
 		  role="button"
+		  aria-label="{`${data[index].label}: ${data[index].value} projects`}"
 		  on:click={(e) => toggleWedge(index, e)}
 		  on:keydown={(e) => handleKeydown(e, index)}
 		  class:selected={selectedIndex === index}
